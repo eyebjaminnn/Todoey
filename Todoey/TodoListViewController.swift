@@ -10,13 +10,17 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
 
-   
+    let defaults = UserDefaults.standard
     
     var itemArray = ["Find Mike", "Buy Eggos", "Destroy Demogorgon"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
     
+        if let items = defaults.array(forKey: "ToDoListArray") as? [String] {
+            itemArray = items
+        }
+        
       
     }
 
@@ -44,10 +48,10 @@ class TodoListViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Test #1 - Print row number
-//        print(indexPath.row)
+        //        print(indexPath.row)
         // Test #2 - Print row contents
-//        print(itemArray[indexPath.row])
-  
+        //        print(itemArray[indexPath.row])
+        
         
         // Toggle checkbox on click
         if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
@@ -59,7 +63,7 @@ class TodoListViewController: UITableViewController {
         
         // Change gray color on 'touch/click' to fade away quickly
         tableView.deselectRow(at: indexPath, animated: true)
-    
+        
     }
     
     
@@ -74,23 +78,24 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             // what will happen once user clicks Add item to our UIAlert button
             self.itemArray.append(textField.text!)
+            
+            self.defaults.set(self.itemArray, forKey: "ToDoListArray")
+            
             self.tableView.reloadData()
         }
         
-        alert.addTextField { (alertTextField) in
-            alertTextField.placeholder = "Create new Iteam"
-            textField = alertTextField
+            alert.addTextField { (alertTextField) in
+                alertTextField.placeholder = "Create new Iteam"
+                textField = alertTextField
+    //            print(alertTextField.text)
+             }
             
-//            print(alertTextField.text)
-           
-        }
-        
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
+            alert.addAction(action)
+            self.present(alert, animated: true, completion: nil)
+
+    
     }
     
-    
-    
+
+
 }
-
-
